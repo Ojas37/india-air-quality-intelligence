@@ -10,7 +10,7 @@ import {
   getAQICategory,
   getCategoryColor,
 } from '../data/mockData';
-import type { MapLayer, PollutantReading, RegionalAQI } from '../types';
+import type { MapLayer, PollutantReading, RegionalAQI, AQICategory } from '../types';
 import {
   LineChart,
   Line,
@@ -208,20 +208,20 @@ const LOCATION_DATABASE: RegionalAQI[] = [
 
 // ── Build pollutant readings from a RegionalAQI entry ───────────────────────
 function buildReadings(loc: RegionalAQI): PollutantReading[] {
-  const aqiCat = getAQICategory(loc.aqi);
-  const pm25Cat = getAQICategory(loc.pm25 * 2.1);
-  const pm10Cat = getAQICategory(loc.pm10 * 1.5);
-  const no2Cat  = getAQICategory(loc.no2  * 3.2);
+  const aqiCat = getAQICategory(loc.aqi) as AQICategory;
+  const pm25Cat = getAQICategory(loc.pm25 * 2.1) as AQICategory;
+  const pm10Cat = getAQICategory((loc.pm10 ?? 0) * 1.5) as AQICategory;
+  const no2Cat  = getAQICategory((loc.no2 ?? 0) * 3.2) as AQICategory;
   const coVal   = loc.co ?? 1.0;
   const o3Val   = loc.o3 ?? 45;
   const so2Val  = loc.so2 ?? 10;
 
   return [
     { id: 'pol-pm25', name: 'Fine Particulate Matter',  shortName: 'PM₂.₅', value: loc.pm25, unit: 'µg/m³', category: pm25Cat, description: 'Particles ≤2.5 µm diameter. Primary health indicator.' },
-    { id: 'pol-pm10', name: 'Coarse Particulate Matter', shortName: 'PM₁₀',  value: loc.pm10, unit: 'µg/m³', category: pm10Cat, description: 'Particles ≤10 µm diameter. Respiratory health concern.' },
-    { id: 'pol-no2',  name: 'Nitrogen Dioxide',          shortName: 'NO₂',   value: loc.no2,  unit: 'ppb',    category: no2Cat,  description: 'Primarily from combustion emissions and traffic.' },
-    { id: 'pol-co',   name: 'Carbon Monoxide',            shortName: 'CO',    value: coVal,    unit: 'mg/m³',  category: getAQICategory(coVal * 30), description: 'Produced by incomplete combustion.' },
-    { id: 'pol-o3',   name: 'Ground-level Ozone',         shortName: 'O₃',    value: o3Val,    unit: 'µg/m³',  category: getAQICategory(o3Val * 1.8), description: 'Secondary pollutant formed from NOx and VOC reactions.' },
+    { id: 'pol-pm10', name: 'Coarse Particulate Matter', shortName: 'PM₁₀',  value: loc.pm10 ?? 0, unit: 'µg/m³', category: pm10Cat, description: 'Particles ≤10 µm diameter. Respiratory health concern.' },
+    { id: 'pol-no2',  name: 'Nitrogen Dioxide',          shortName: 'NO₂',   value: loc.no2 ?? 0,  unit: 'ppb',    category: no2Cat,  description: 'Primarily from combustion emissions and traffic.' },
+    { id: 'pol-co',   name: 'Carbon Monoxide',            shortName: 'CO',    value: coVal,    unit: 'mg/m³',  category: getAQICategory(coVal * 30) as AQICategory, description: 'Produced by incomplete combustion.' },
+    { id: 'pol-o3',   name: 'Ground-level Ozone',         shortName: 'O₃',    value: o3Val,    unit: 'µg/m³',  category: getAQICategory(o3Val * 1.8) as AQICategory, description: 'Secondary pollutant formed from NOx and VOC reactions.' },
     { id: 'pol-so2',  name: 'Sulphur Dioxide',            shortName: 'SO₂',   value: so2Val,   unit: 'ppb',    category: aqiCat,  description: 'From industrial processes and fossil fuel combustion.' },
   ];
 }

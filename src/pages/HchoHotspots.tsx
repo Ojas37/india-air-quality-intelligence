@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Zap, AlertTriangle, Info } from 'lucide-react';
+import { Zap, Info } from 'lucide-react';
 import MapContainer from '../components/map/MapContainer';
 import { hchoHotspots, defaultMapLayers } from '../data/mockData';
 import type { MapLayer } from '../types';
