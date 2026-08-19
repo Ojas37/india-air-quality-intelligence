@@ -54,22 +54,6 @@ const HchoHotspots: React.FC = () => {
               Formaldehyde (HCHO) spatial analysis — satellite-derived observations and potential biomass-burning indicators
             </p>
           </div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              background: '#fef3c7',
-              border: '1px solid #fde68a',
-              borderRadius: '6px',
-              padding: '6px 10px',
-            }}
-          >
-            <AlertTriangle size={12} color="#92400e" />
-            <span style={{ fontSize: '10px', color: '#92400e', fontWeight: '600' }}>
-              Analytical indication only — not confirmed causation
-            </span>
-          </div>
         </div>
       </div>
 
