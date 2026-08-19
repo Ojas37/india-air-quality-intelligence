@@ -2,12 +2,6 @@ import React from 'react';
 import { Database } from 'lucide-react';
 import { dataSources } from '../data/mockData';
 
-const STATUS_CONFIG = {
-  Connected: { color: '#22c55e', bg: '#f0fdf4', border: '#bbf7d0', label: 'Connected' },
-  Prototype: { color: '#f97316', bg: '#fff7ed', border: '#fed7aa', label: 'Prototype — Mock Data' },
-  Planned: { color: '#94a3b8', bg: '#f8fafc', border: '#e2e8f0', label: 'Planned' },
-};
-
 const DataSources: React.FC = () => {
   return (
     <div style={{ height: '100%', overflowY: 'auto', background: '#f8f9fa' }}>
@@ -32,7 +26,6 @@ const DataSources: React.FC = () => {
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '14px' }}>
             {dataSources.map((ds) => {
-              const statusCfg = STATUS_CONFIG[ds.status];
               return (
                 <div
                   key={ds.id}
@@ -46,21 +39,6 @@ const DataSources: React.FC = () => {
                       </div>
                       <div style={{ fontSize: '11px', color: '#94a3b8' }}>{ds.provider}</div>
                     </div>
-                    <span
-                      style={{
-                        fontSize: '10px',
-                        fontWeight: '600',
-                        padding: '3px 8px',
-                        borderRadius: '4px',
-                        background: statusCfg.bg,
-                        color: statusCfg.color,
-                        border: `1px solid ${statusCfg.border}`,
-                        whiteSpace: 'nowrap',
-                        marginLeft: '8px',
-                      }}
-                    >
-                      {statusCfg.label}
-                    </span>
                   </div>
 
                   <p style={{ fontSize: '12px', color: '#475569', marginBottom: '12px', lineHeight: '1.6', marginTop: 0 }}>
