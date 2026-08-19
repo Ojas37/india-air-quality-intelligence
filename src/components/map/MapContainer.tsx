@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   MapContainer as LeafletMap,
   TileLayer,
   CircleMarker,
   Popup,
   Tooltip,
+  useMap,
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { MapLayer } from '../../types';
@@ -26,6 +27,16 @@ interface MapContainerProps {
   layers: MapLayer[];
   onLayerToggle: (id: string) => void;
   mode?: 'overview' | 'air-quality' | 'hcho' | 'fire' | 'transport';
+  selectedLocation?: {
+    region: string;
+    lat: number;
+    lng: number;
+    aqi: number;
+    status: string;
+    pm25: number;
+    pm10?: number;
+    no2?: number;
+  } | null;
 }
 
 // Helper to check if a layer is enabled
@@ -60,15 +71,20 @@ const WindArrow: React.FC<{ lat: number; lng: number; speed: number; direction: 
   );
 };
 
-const MapContent: React.FC<{ layers: MapLayer[]; mode: string }> = ({ layers, mode }) => {
+const MapContent: React.FC<{
+  layers: MapLayer[];
+  mode: string;
+  selectedLocation?: MapContainerProps['selectedLocation'];
+  isMapAnimating?: boolean;
+}> = ({ layers, mode, selectedLocation, isMapAnimating }) => {
   // AQI circles for major cities
-  const showAQI = isEnabled(layers, 'Surface AQI') || mode === 'overview';
-  const showStations = isEnabled(layers, 'Monitoring Stations');
-  const showHCHO = isEnabled(layers, 'HCHO') || mode === 'hcho';
-  const showFires = isEnabled(layers, 'Active Fires') || mode === 'fire';
-  const showWind = isEnabled(layers, 'Wind Direction') || mode === 'transport';
-  const showPM25 = isEnabled(layers, 'PM2.5');
-  const showPM10 = isEnabled(layers, 'PM10');
+  const showAQI = !isMapAnimating && (isEnabled(layers, 'Surface AQI') || mode === 'overview');
+  const showStations = !isMapAnimating && isEnabled(layers, 'Monitoring Stations');
+  const showHCHO = !isMapAnimating && (isEnabled(layers, 'HCHO') || mode === 'hcho');
+  const showFires = !isMapAnimating && (isEnabled(layers, 'Active Fires') || mode === 'fire');
+  const showWind = !isMapAnimating && (isEnabled(layers, 'Wind Direction') || mode === 'transport');
+  const showPM25 = !isMapAnimating && isEnabled(layers, 'PM2.5');
+  const showPM10 = !isMapAnimating && isEnabled(layers, 'PM10');
 
   return (
     <>
@@ -294,16 +310,98 @@ const MapContent: React.FC<{ layers: MapLayer[]; mode: string }> = ({ layers, mo
             direction={vec.direction}
           />
         ))}
+
+      {/* Selected Location Highlight Marker */}
+      {selectedLocation && (
+        <CircleMarker
+          center={[selectedLocation.lat, selectedLocation.lng]}
+          radius={12}
+          pathOptions={{
+            fillColor: getAQIColor(selectedLocation.aqi),
+            fillOpacity: 0.85,
+            color: '#1e293b',
+            weight: 2,
+          }}
+        >
+          <Tooltip permanent direction="top" offset={[0, -6]}>
+            <div style={{ textAlign: 'center', fontSize: '11px', padding: '1px' }}>
+              <div style={{ fontWeight: '700', color: '#1e293b' }}>📍 {selectedLocation.region}</div>
+              <div style={{ fontWeight: '800', color: getAQIColor(selectedLocation.aqi), fontSize: '12px' }}>
+                AQI {selectedLocation.aqi}
+              </div>
+            </div>
+          </Tooltip>
+          <Popup>
+            <div style={{ minWidth: '160px', fontFamily: 'Inter, sans-serif' }}>
+              <div style={{ fontWeight: '700', fontSize: '13px', marginBottom: '8px', color: '#1e293b' }}>
+                📍 {selectedLocation.region}
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px', fontSize: '12px' }}>
+                <span style={{ color: '#64748b' }}>AQI</span>
+                <span style={{ fontWeight: '600', color: getAQIColor(selectedLocation.aqi) }}>{selectedLocation.aqi}</span>
+                <span style={{ color: '#64748b' }}>PM₂.₅</span>
+                <span style={{ fontWeight: '500' }}>{selectedLocation.pm25} µg/m³</span>
+                {selectedLocation.pm10 && (
+                  <>
+                    <span style={{ color: '#64748b' }}>PM₁₀</span>
+                    <span style={{ fontWeight: '500' }}>{selectedLocation.pm10} µg/m³</span>
+                  </>
+                )}
+                {selectedLocation.no2 && (
+                  <>
+                    <span style={{ color: '#64748b' }}>NO₂</span>
+                    <span style={{ fontWeight: '500' }}>{selectedLocation.no2} ppb</span>
+                  </>
+                )}
+                <span style={{ color: '#64748b' }}>Status</span>
+                <span style={{ fontWeight: '600', color: getCategoryColor(selectedLocation.status) }}>{selectedLocation.status}</span>
+              </div>
+            </div>
+          </Popup>
+        </CircleMarker>
+      )}
     </>
   );
+};
+
+const MapFocus: React.FC<{
+  selectedLocation?: MapContainerProps['selectedLocation'];
+  setMapAnimating: (animating: boolean) => void;
+}> = ({ selectedLocation, setMapAnimating }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    const handleMoveStart = () => setMapAnimating(true);
+    const handleMoveEnd = () => setMapAnimating(false);
+
+    map.on('movestart', handleMoveStart);
+    map.on('moveend', handleMoveEnd);
+
+    return () => {
+      map.off('movestart', handleMoveStart);
+      map.off('moveend', handleMoveEnd);
+    };
+  }, [map, setMapAnimating]);
+
+  useEffect(() => {
+    if (selectedLocation) {
+      map.flyTo([selectedLocation.lat, selectedLocation.lng], 10, {
+        animate: true,
+        duration: 2.5, // 2.5 seconds smooth flying zoom transition
+      });
+    }
+  }, [selectedLocation, map]);
+  return null;
 };
 
 const MapContainer: React.FC<MapContainerProps> = ({
   layers,
   onLayerToggle,
   mode = 'overview',
+  selectedLocation,
 }) => {
   const [showLayers, setShowLayers] = useState(false);
+  const [isMapAnimating, setIsMapAnimating] = useState(false);
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -314,7 +412,13 @@ const MapContainer: React.FC<MapContainerProps> = ({
         zoomControl={true}
         scrollWheelZoom={true}
       >
-        <MapContent layers={layers} mode={mode} />
+        <MapContent
+          layers={layers}
+          mode={mode}
+          selectedLocation={isMapAnimating ? null : selectedLocation}
+          isMapAnimating={isMapAnimating}
+        />
+        <MapFocus selectedLocation={selectedLocation} setMapAnimating={setIsMapAnimating} />
       </LeafletMap>
 
       {/* Layer control toggle */}
