@@ -1,5 +1,5 @@
 import React from 'react';
-import { Database, AlertTriangle } from 'lucide-react';
+import { Database } from 'lucide-react';
 import { dataSources } from '../data/mockData';
 
 const STATUS_CONFIG = {
@@ -23,30 +23,6 @@ const DataSources: React.FC = () => {
           <p style={{ fontSize: '12px', color: '#64748b', margin: 0, lineHeight: '1.6' }}>
             Scientific data sources planned for integration into the India Air Quality Intelligence Platform
           </p>
-        </div>
-
-        {/* Prototype notice */}
-        <div
-          style={{
-            background: '#fffbeb',
-            border: '1px solid #fde68a',
-            borderRadius: '8px',
-            padding: '14px 16px',
-            display: 'flex',
-            gap: '12px',
-            marginBottom: '24px',
-            alignItems: 'flex-start',
-          }}
-        >
-          <AlertTriangle size={16} color="#d97706" style={{ flexShrink: 0, marginTop: '1px' }} />
-          <div>
-            <div style={{ fontSize: '13px', fontWeight: '700', color: '#92400e', marginBottom: '4px' }}>
-              Prototype Mode — Demo Interface
-            </div>
-            <div style={{ fontSize: '12px', color: '#78350f', lineHeight: '1.6' }}>
-              This platform is currently operating in prototype mode. All displayed data is <strong>mock/simulated data</strong> designed to demonstrate the interface and analytical capabilities. The data sources listed below represent the planned real-data integration pipeline. No live API connections are active in this phase.
-            </div>
-          </div>
         </div>
 
         {/* Data source cards */}
