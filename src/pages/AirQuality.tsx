@@ -10,7 +10,7 @@ import {
   getAQICategory,
   getCategoryColor,
 } from '../data/mockData';
-import type { MapLayer, PollutantReading, RegionalAQI, AQICategory } from '../types';
+import type { MapLayer, PollutantReading, RegionalAQI, AQICategory, AIPredictionResult } from '../types';
 import {
   LineChart,
   Line,
@@ -21,6 +21,8 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import StatusBadge from '../components/common/StatusBadge';
+import ExplainabilityCard from '../components/common/ExplainabilityCard';
+import { api } from '../services/api';
 
 // ── Extended location database (cities + small towns/villages) ──────────────
 const LOCATION_DATABASE: RegionalAQI[] = [
@@ -304,6 +306,16 @@ const AirQuality: React.FC = () => {
     setShowDropdown(false);
   };
 
+  const [prediction, setPrediction] = useState<AIPredictionResult | null>(null);
+
+  useEffect(() => {
+    if (selectedLocation) {
+      api.getPrediction(selectedLocation.lat, selectedLocation.lng)
+        .then((res) => setPrediction(res))
+        .catch(() => {});
+    }
+  }, [selectedLocation]);
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -563,6 +575,11 @@ const AirQuality: React.FC = () => {
                 <PollutantCard key={p.id} pollutant={p} compact />
               ))}
             </div>
+
+            {/* AI Estimation & TreeSHAP Explainability Card */}
+            {prediction && (
+              <ExplainabilityCard prediction={prediction} />
+            )}
           </div>
 
           {/* 24-hour trend */}

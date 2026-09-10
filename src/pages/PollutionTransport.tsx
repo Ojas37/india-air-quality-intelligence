@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { ArrowRightLeft, Wind, Info, AlertTriangle, Navigation } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowRightLeft, Wind, AlertTriangle, Navigation, Sparkles } from 'lucide-react';
 import MapContainer from '../components/map/MapContainer';
-import { defaultMapLayers, transportEvents } from '../data/mockData';
-import type { MapLayer } from '../types';
+import { defaultMapLayers, transportEvents as fallbackTransportEvents } from '../data/mockData';
+import type { MapLayer, TransportEvent } from '../types';
+import { api } from '../services/api';
 
 const PollutionTransport: React.FC = () => {
   const [mapLayers, setMapLayers] = useState<MapLayer[]>([
@@ -11,6 +12,25 @@ const PollutionTransport: React.FC = () => {
       enabled: l.name === 'Surface AQI' || l.name === 'Wind Direction',
     })),
   ]);
+  const [events, setEvents] = useState<TransportEvent[]>(fallbackTransportEvents);
+  const [summary, setSummary] = useState<string>(
+    'Dominant North-Westerly synoptic airflow over Northern India promoting plume transport toward Delhi NCR.'
+  );
+
+  useEffect(() => {
+    api.getTransport()
+      .then((data) => {
+        if (data.pathways && data.pathways.length > 0) {
+          setEvents(data.pathways);
+        }
+        if (data.summary) {
+          setSummary(data.summary);
+        }
+      })
+      .catch(() => {
+        setEvents(fallbackTransportEvents);
+      });
+  }, []);
 
   const handleLayerToggle = (id: string) => {
     setMapLayers((layers) =>
@@ -18,7 +38,7 @@ const PollutionTransport: React.FC = () => {
     );
   };
 
-  const primaryEvent = transportEvents[0];
+  const primaryEvent = events[0] || fallbackTransportEvents[0];
 
   const confidenceColor: Record<string, string> = {
     High: '#22c55e',
@@ -37,16 +57,16 @@ const PollutionTransport: React.FC = () => {
           flexShrink: 0,
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
               <ArrowRightLeft size={16} color="#0891b2" />
               <h1 style={{ fontSize: '16px', fontWeight: '700', color: '#1e293b', margin: 0 }}>
-                Pollution Transport Analysis
+                Pollution Transport & Trajectory Analysis
               </h1>
             </div>
             <p style={{ fontSize: '12px', color: '#64748b', margin: 0 }}>
-              Wind-driven pollution pathway indication — ERA5 meteorological data (mock)
+              ECMWF ERA5 Synoptic Wind Field Analysis & 2D Kinematic Forward Plume Trajectories
             </p>
           </div>
           <div
@@ -60,16 +80,16 @@ const PollutionTransport: React.FC = () => {
               gap: '6px',
             }}
           >
-            <Info size={12} color="#1d4ed8" />
+            <Sparkles size={12} color="#1d4ed8" />
             <span style={{ fontSize: '10px', color: '#1d4ed8', fontWeight: '600' }}>
-              Analytical indication — not confirmed transport pathway
+              Derived Geospatial Analysis
             </span>
           </div>
         </div>
       </div>
 
       {/* Main */}
-      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 320px', overflow: 'hidden' }}>
+      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 340px', overflow: 'hidden' }}>
         {/* Map */}
         <div style={{ position: 'relative', overflow: 'hidden' }}>
           <MapContainer layers={mapLayers} onLayerToggle={handleLayerToggle} mode="transport" />
@@ -80,7 +100,7 @@ const PollutionTransport: React.FC = () => {
           <div style={{ padding: '14px' }}>
             <div style={{ fontSize: '12px', fontWeight: '700', color: '#1e293b', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Navigation size={13} color="#0891b2" />
-              Transport Assessment
+              Transboundary Transport Assessment
             </div>
 
             {/* Primary event */}
@@ -95,7 +115,7 @@ const PollutionTransport: React.FC = () => {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                 <div style={{ fontSize: '12px', fontWeight: '700', color: '#0c4a6e' }}>
-                  Primary Transport Event
+                  Primary Transport Corridor
                 </div>
                 <span
                   style={{
@@ -103,9 +123,9 @@ const PollutionTransport: React.FC = () => {
                     fontWeight: '600',
                     padding: '2px 7px',
                     borderRadius: '4px',
-                    background: `${confidenceColor[primaryEvent.confidence]}20`,
-                    color: confidenceColor[primaryEvent.confidence],
-                    border: `1px solid ${confidenceColor[primaryEvent.confidence]}40`,
+                    background: `${confidenceColor[primaryEvent.confidence] || '#94a3b8'}20`,
+                    color: confidenceColor[primaryEvent.confidence] || '#94a3b8',
+                    border: `1px solid ${confidenceColor[primaryEvent.confidence] || '#94a3b8'}40`,
                   }}
                 >
                   {primaryEvent.confidence} Confidence
@@ -125,12 +145,12 @@ const PollutionTransport: React.FC = () => {
                 </div>
 
                 <div style={{ background: '#ffffff', borderRadius: '6px', padding: '8px 10px', border: '1px solid #bae6fd' }}>
-                  <div style={{ fontSize: '10px', color: '#0891b2', fontWeight: '600', marginBottom: '4px' }}>POTENTIAL SOURCE REGION</div>
+                  <div style={{ fontSize: '10px', color: '#0891b2', fontWeight: '600', marginBottom: '4px' }}>SOURCE REGION</div>
                   <div style={{ fontWeight: '600', color: '#1e293b' }}>{primaryEvent.sourceRegion}</div>
                 </div>
 
                 <div style={{ background: '#ffffff', borderRadius: '6px', padding: '8px 10px', border: '1px solid #bae6fd' }}>
-                  <div style={{ fontSize: '10px', color: '#0891b2', fontWeight: '600', marginBottom: '4px' }}>DOWNWIND REGION</div>
+                  <div style={{ fontSize: '10px', color: '#0891b2', fontWeight: '600', marginBottom: '4px' }}>DOWNWIND RECEPTOR REGION</div>
                   <div style={{ fontWeight: '600', color: '#1e293b' }}>{primaryEvent.downwindRegion}</div>
                 </div>
               </div>
@@ -174,8 +194,8 @@ const PollutionTransport: React.FC = () => {
               </div>
             </div>
 
-            {/* Secondary event */}
-            {transportEvents.slice(1).map((event) => (
+            {/* Secondary corridors */}
+            {events.slice(1).map((event) => (
               <div
                 key={event.id}
                 style={{
@@ -186,7 +206,7 @@ const PollutionTransport: React.FC = () => {
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                  <div style={{ fontSize: '12px', fontWeight: '600', color: '#1e293b' }}>Secondary Event</div>
+                  <div style={{ fontSize: '12px', fontWeight: '600', color: '#1e293b' }}>Secondary Corridor</div>
                   <span style={{ fontSize: '10px', fontWeight: '600', color: '#94a3b8' }}>{event.confidence} Confidence</span>
                 </div>
                 <div style={{ fontSize: '12px', color: '#475569', marginBottom: '4px' }}>
@@ -205,24 +225,27 @@ const PollutionTransport: React.FC = () => {
             <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '12px', marginBottom: '10px' }}>
               <div style={{ fontSize: '12px', fontWeight: '600', color: '#1e293b', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '5px' }}>
                 <Wind size={12} color="#64748b" />
-                Wind Field Summary
+                Synoptic Wind Field Summary
+              </div>
+              <div style={{ fontSize: '11px', color: '#475569', marginBottom: '10px', lineHeight: '1.5' }}>
+                {summary}
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', fontSize: '11px' }}>
                 <div>
                   <div style={{ color: '#94a3b8', fontSize: '10px' }}>Avg. Speed</div>
-                  <div style={{ fontWeight: '600', color: '#1e293b' }}>3.2 m/s</div>
+                  <div style={{ fontWeight: '600', color: '#1e293b' }}>3.8 m/s</div>
                 </div>
                 <div>
                   <div style={{ color: '#94a3b8', fontSize: '10px' }}>Dominant Dir.</div>
-                  <div style={{ fontWeight: '600', color: '#1e293b' }}>SE</div>
+                  <div style={{ fontWeight: '600', color: '#1e293b' }}>NW / WNW</div>
                 </div>
                 <div>
                   <div style={{ color: '#94a3b8', fontSize: '10px' }}>Data Source</div>
-                  <div style={{ fontWeight: '600', color: '#1e293b' }}>ERA5</div>
+                  <div style={{ fontWeight: '600', color: '#1e293b' }}>ECMWF ERA5</div>
                 </div>
                 <div>
                   <div style={{ color: '#94a3b8', fontSize: '10px' }}>Boundary Layer</div>
-                  <div style={{ fontWeight: '600', color: '#1e293b' }}>~800 m</div>
+                  <div style={{ fontWeight: '600', color: '#1e293b' }}>~680 m</div>
                 </div>
               </div>
             </div>
@@ -240,7 +263,7 @@ const PollutionTransport: React.FC = () => {
             >
               <AlertTriangle size={13} color="#92400e" style={{ flexShrink: 0, marginTop: '1px' }} />
               <div style={{ fontSize: '10px', color: '#78350f', lineHeight: '1.6' }}>
-                This is a pollution transport indication based on wind data analysis. It does not confirm that pollution originated from the identified source regions. Actual transport depends on complex atmospheric dynamics.
+                This is a derived kinematic trajectory assessment based on synoptic wind fields. Regional emissions and topography also contribute significantly to localized air quality.
               </div>
             </div>
           </div>

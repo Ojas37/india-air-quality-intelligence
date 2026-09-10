@@ -195,3 +195,38 @@ export interface MapLayer {
   enabled: boolean;
   description: string;
 }
+
+// ─── AI Prediction & Explainability ──────────────────────────
+export interface FeatureContribution {
+  feature: string;
+  contribution_ugm3: number;
+  percentage: number;
+  description: string;
+}
+
+export interface AIPredictionResult {
+  latitude: number;
+  longitude: number;
+  region_name: string;
+  pm25_pred: number;
+  pm25_unit: string;
+  aqi_pred: number;
+  aqi_category: AQICategory;
+  dominant_pollutant: string;
+  confidence_score: number;
+  confidence_interval_95: [number, number];
+  confidence_level: 'High' | 'Moderate' | 'Low';
+  feature_contributions: FeatureContribution[];
+  model_version: string;
+  source_type: string;
+  timestamp: string;
+}
+
+export interface HealthStatus {
+  status: string;
+  project: string;
+  version: string;
+  demo_mode: boolean;
+  timestamp: string;
+  data_freshness: Record<string, string>;
+}

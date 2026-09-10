@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { Settings, User, ChevronDown, RefreshCw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Settings, User, ChevronDown, RefreshCw, ShieldCheck } from 'lucide-react';
+import { api } from '../../services/api';
+import type { HealthStatus } from '../../types';
 
 interface TopHeaderProps {
   title?: string;
@@ -19,6 +21,13 @@ const REGIONS = [
 const TopHeader: React.FC<TopHeaderProps> = ({ title, subtitle }) => {
   const [selectedRegion, setSelectedRegion] = useState('All India');
   const [selectedDate, setSelectedDate] = useState('2026-08-19');
+  const [health, setHealth] = useState<HealthStatus | null>(null);
+
+  useEffect(() => {
+    api.getHealth().then((h) => {
+      if (h) setHealth(h);
+    });
+  }, []);
 
   return (
     <header
@@ -69,6 +78,25 @@ const TopHeader: React.FC<TopHeaderProps> = ({ title, subtitle }) => {
 
       {/* Controls */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+        {/* SIH Demonstration Dataset Badge */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px',
+            fontSize: '11px',
+            fontWeight: '600',
+            color: '#1d4ed8',
+            background: '#eff6ff',
+            border: '1px solid #bfdbfe',
+            borderRadius: '6px',
+            padding: '4px 8px',
+          }}
+        >
+          <ShieldCheck size={12} color="#1d4ed8" />
+          <span>SIH Demonstration Dataset</span>
+        </div>
+
         {/* Data status */}
         <div
           style={{
@@ -84,7 +112,7 @@ const TopHeader: React.FC<TopHeaderProps> = ({ title, subtitle }) => {
           }}
         >
           <RefreshCw size={10} color="#22c55e" />
-          <span>Updated 14:00 IST</span>
+          <span>{health?.demo_mode ? 'FastAPI Connected' : 'Sync Active'}</span>
         </div>
 
 

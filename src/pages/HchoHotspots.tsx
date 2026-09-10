@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Zap, Info } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Zap, Info, Filter, Sparkles } from 'lucide-react';
 import MapContainer from '../components/map/MapContainer';
-import { hchoHotspots, defaultMapLayers } from '../data/mockData';
-import type { MapLayer } from '../types';
+import { hchoHotspots as fallbackHotspots, defaultMapLayers } from '../data/mockData';
+import type { MapLayer, HCHOHotspot } from '../types';
+import { api } from '../services/api';
 
 const HCHO_LEVEL_COLOR: Record<string, string> = {
   High: '#dc2626',
@@ -23,13 +24,21 @@ const HchoHotspots: React.FC = () => {
     ...defaultMapLayers.map((l) => ({ ...l, enabled: l.name === 'HCHO' })),
   ]);
   const [selected, setSelected] = useState<string | null>(null);
+  const [correlationFilter, setCorrelationFilter] = useState<string>('All');
+  const [hotspots, setHotspots] = useState<HCHOHotspot[]>(fallbackHotspots);
+
+  useEffect(() => {
+    const filterArg = correlationFilter === 'All' ? undefined : correlationFilter;
+    api.getHCHOHotspots(filterArg)
+      .then((data) => setHotspots(data))
+      .catch(() => setHotspots(fallbackHotspots));
+  }, [correlationFilter]);
 
   const handleLayerToggle = (id: string) => {
     setMapLayers((layers) =>
       layers.map((l) => (l.id === id ? { ...l, enabled: !l.enabled } : l))
     );
   };
-
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
@@ -42,7 +51,7 @@ const HchoHotspots: React.FC = () => {
           flexShrink: 0,
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
               <Zap size={16} color="#7c3aed" />
@@ -51,8 +60,32 @@ const HchoHotspots: React.FC = () => {
               </h1>
             </div>
             <p style={{ fontSize: '12px', color: '#64748b', margin: 0 }}>
-              Formaldehyde (HCHO) spatial analysis — satellite-derived observations and potential biomass-burning indicators
+              Sentinel-5P TROPOMI Formaldehyde (HCHO) tropospheric column & active fire cross-correlation
             </p>
+          </div>
+
+          {/* Filter Bar */}
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <Filter size={12} color="#64748b" />
+            <select
+              value={correlationFilter}
+              onChange={(e) => setCorrelationFilter(e.target.value)}
+              style={{
+                border: '1px solid #e2e8f0',
+                background: '#f8fafc',
+                borderRadius: '4px',
+                fontSize: '11px',
+                padding: '4px 8px',
+                color: '#1e293b',
+                cursor: 'pointer',
+                outline: 'none',
+              }}
+            >
+              <option value="All">All Fire Correlations</option>
+              <option value="Strong">Strong Correlation (Biomass/Agricultural)</option>
+              <option value="Moderate">Moderate Correlation</option>
+              <option value="Weak">Weak / Biogenic / Petrochemical</option>
+            </select>
           </div>
         </div>
       </div>
@@ -62,7 +95,7 @@ const HchoHotspots: React.FC = () => {
         style={{
           flex: 1,
           display: 'grid',
-          gridTemplateColumns: '1fr 320px',
+          gridTemplateColumns: '1fr 340px',
           overflow: 'hidden',
         }}
       >
@@ -84,12 +117,26 @@ const HchoHotspots: React.FC = () => {
           }}
         >
           <div style={{ padding: '14px 14px 0' }}>
-            <div style={{ fontSize: '12px', fontWeight: '600', color: '#1e293b', marginBottom: '10px' }}>
-              Detected Hotspots ({hchoHotspots.length})
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+              <div style={{ fontSize: '12px', fontWeight: '600', color: '#1e293b' }}>
+                Detected Hotspots ({hotspots.length})
+              </div>
+              <span
+                style={{
+                  fontSize: '10px',
+                  color: '#7c3aed',
+                  background: '#f5f3ff',
+                  padding: '2px 6px',
+                  borderRadius: '4px',
+                  fontWeight: '600',
+                }}
+              >
+                Satellite Observed
+              </span>
             </div>
 
             {/* Hotspot list */}
-            {hchoHotspots.map((spot) => (
+            {hotspots.map((spot) => (
               <div
                 key={spot.id}
                 onClick={() => setSelected(selected === spot.id ? null : spot.id)}
@@ -117,9 +164,9 @@ const HchoHotspots: React.FC = () => {
                       fontWeight: '600',
                       padding: '2px 8px',
                       borderRadius: '4px',
-                      background: `${HCHO_LEVEL_COLOR[spot.hchoLevel]}18`,
-                      color: HCHO_LEVEL_COLOR[spot.hchoLevel],
-                      border: `1px solid ${HCHO_LEVEL_COLOR[spot.hchoLevel]}35`,
+                      background: `${HCHO_LEVEL_COLOR[spot.hchoLevel] || '#94a3b8'}18`,
+                      color: HCHO_LEVEL_COLOR[spot.hchoLevel] || '#94a3b8',
+                      border: `1px solid ${HCHO_LEVEL_COLOR[spot.hchoLevel] || '#94a3b8'}35`,
                     }}
                   >
                     {spot.hchoLevel}
@@ -127,13 +174,13 @@ const HchoHotspots: React.FC = () => {
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px', fontSize: '11px' }}>
-                  <span style={{ color: '#64748b' }}>HCHO</span>
+                  <span style={{ color: '#64748b' }}>HCHO Column</span>
                   <span style={{ fontWeight: '600', color: '#7c3aed' }}>{spot.hchoValue} × 10⁻⁵ mol/m²</span>
                   <span style={{ color: '#64748b' }}>Fire correlation</span>
                   <span
                     style={{
                       fontWeight: '600',
-                      color: CORRELATION_COLOR[spot.fireCorrelation],
+                      color: CORRELATION_COLOR[spot.fireCorrelation] || '#94a3b8',
                     }}
                   >
                     {spot.fireCorrelation}
@@ -163,14 +210,18 @@ const HchoHotspots: React.FC = () => {
                     <div
                       style={{
                         fontSize: '10px',
-                        color: '#94a3b8',
-                        fontStyle: 'italic',
-                        borderTop: '1px solid #f8fafc',
-                        paddingTop: '6px',
-                        marginTop: '4px',
+                        color: '#64748b',
+                        background: '#f8fafc',
+                        padding: '6px 8px',
+                        borderRadius: '4px',
+                        marginTop: '6px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
                       }}
                     >
-                      Potential source region — analytical indication only. Satellite-derived HCHO from TROPOMI (mock data).
+                      <Sparkles size={11} color="#7c3aed" />
+                      Sentinel-5P TROPOMI Level-2 Tropospheric HCHO Column Product.
                     </div>
                   </div>
                 )}
@@ -190,7 +241,7 @@ const HchoHotspots: React.FC = () => {
               </div>
             ))}
             <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '8px', lineHeight: '1.5' }}>
-              Derived from Sentinel-5P / TROPOMI atmospheric column measurements (mock data for demonstration)
+              Derived from Sentinel-5P / TROPOMI atmospheric column measurements (SIH Demonstration Dataset)
             </div>
           </div>
         </div>

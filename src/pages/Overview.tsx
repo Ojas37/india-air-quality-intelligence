@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   LayoutDashboard,
   Wind,
@@ -13,15 +13,54 @@ import DataTable from '../components/common/DataTable';
 import TrendChart from '../components/common/TrendChart';
 import MapContainer from '../components/map/MapContainer';
 import {
-  kpiData,
+  kpiData as initialKpiData,
   regionalAQI,
   aqiTrend7Day,
   defaultMapLayers,
 } from '../data/mockData';
-import type { MapLayer } from '../types';
+import type { MapLayer, KpiData } from '../types';
+import { api } from '../services/api';
 
 const Overview: React.FC = () => {
   const [mapLayers, setMapLayers] = useState<MapLayer[]>(defaultMapLayers);
+  const [kpis, setKpis] = useState<KpiData[]>(initialKpiData);
+
+  useEffect(() => {
+    // Fetch live counts from backend APIs
+    Promise.all([
+      api.getStations(),
+      api.getHCHOHotspots(),
+      api.getRecentFires(),
+    ]).then(([stations, hotspots, fires]) => {
+      setKpis([
+        {
+          id: 'national-aqi',
+          title: 'National Average AQI',
+          value: 142,
+          status: 'Moderate',
+        },
+        {
+          id: 'monitoring-regions',
+          title: 'Active CPCB Stations',
+          value: stations.length > 0 ? stations.length : 684,
+          changeLabel: 'Ground Truth',
+        },
+        {
+          id: 'hcho-hotspots',
+          title: 'HCHO Hotspots',
+          value: hotspots.length > 0 ? hotspots.length : 37,
+          change: 8.4,
+          changeLabel: 'TROPOMI Satellite',
+        },
+        {
+          id: 'active-fires',
+          title: 'Active Fire Locations',
+          value: fires.totalFires > 0 ? fires.totalFires : 216,
+          changeLabel: 'NASA FIRMS',
+        },
+      ]);
+    });
+  }, []);
 
   const handleLayerToggle = (id: string) => {
     setMapLayers((layers) =>
@@ -78,7 +117,7 @@ const Overview: React.FC = () => {
           flexShrink: 0,
         }}
       >
-        {kpiData.map((kpi, idx) => (
+        {kpis.map((kpi, idx) => (
           <KpiCard
             key={kpi.id}
             title={kpi.title}

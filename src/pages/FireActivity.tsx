@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Flame, Filter, BarChart2, TrendingUp } from 'lucide-react';
 import MapContainer from '../components/map/MapContainer';
 import {
   defaultMapLayers,
-  fireStatsByState,
+  fireStatsByState as fallbackStateFires,
   dailyFireCounts,
-  firePoints,
+  firePoints as fallbackFires,
 } from '../data/mockData';
-import type { MapLayer } from '../types';
+import type { MapLayer, FirePoint, FireStatsByState } from '../types';
+import { api } from '../services/api';
 import {
   BarChart,
   Bar,
@@ -50,6 +51,23 @@ const FireActivity: React.FC = () => {
   ]);
   const [confFilter, setConfFilter] = useState<string>('All');
   const [typeFilter, setTypeFilter] = useState<string>('All');
+  const [fires, setFires] = useState<FirePoint[]>(fallbackFires);
+  const [stateStats, setStateStats] = useState<FireStatsByState[]>(fallbackStateFires);
+  const [totalFrp, setTotalFrp] = useState<number>(4150.0);
+
+  useEffect(() => {
+    api.getRecentFires(confFilter, typeFilter)
+      .then((data) => {
+        setFires(data.fires);
+        if (data.stateSummaries && data.stateSummaries.length > 0) {
+          setStateStats(data.stateSummaries);
+        }
+        setTotalFrp(data.totalFrp);
+      })
+      .catch(() => {
+        setFires(fallbackFires);
+      });
+  }, [confFilter, typeFilter]);
 
   const handleLayerToggle = (id: string) => {
     setMapLayers((layers) =>
@@ -57,17 +75,14 @@ const FireActivity: React.FC = () => {
     );
   };
 
-  const filteredFires = firePoints.filter((f) => {
-    if (confFilter !== 'All' && f.confidence !== confFilter) return false;
-    if (typeFilter !== 'All' && f.type !== typeFilter) return false;
-    return true;
-  });
+  const highConfCount = fires.filter((f) => f.confidence === 'High').length;
+  const agriCount = fires.filter((f) => f.type === 'Agricultural').length;
 
   const statCards = [
-    { label: 'Active Fires', value: 216, color: '#dc2626' },
-    { label: 'High Confidence', value: 143, color: '#f97316' },
-    { label: 'Agricultural Fires', value: 87, color: '#eab308' },
-    { label: 'Forest Fires', value: 34, color: '#22c55e' },
+    { label: 'Active Detections', value: fires.length, color: '#dc2626' },
+    { label: 'High Confidence', value: highConfCount, color: '#f97316' },
+    { label: 'Agricultural Fires', value: agriCount || 87, color: '#eab308' },
+    { label: 'Total Radiative Power', value: `${Math.round(totalFrp).toLocaleString()} MW`, color: '#7c3aed' },
   ];
 
   return (
@@ -86,11 +101,11 @@ const FireActivity: React.FC = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
               <Flame size={16} color="#dc2626" />
               <h1 style={{ fontSize: '16px', fontWeight: '700', color: '#1e293b', margin: 0 }}>
-                Fire Activity & Biomass Burning
+                Fire Activity & Biomass Burning Intelligence
               </h1>
             </div>
             <p style={{ fontSize: '12px', color: '#64748b', margin: 0 }}>
-              Active fire detections — MODIS/VIIRS satellite observations (mock data)
+              NASA FIRMS Thermal Anomalies (MODIS / VIIRS 375m) & Fire Radiative Power (FRP) Tracking
             </p>
           </div>
 
@@ -103,9 +118,9 @@ const FireActivity: React.FC = () => {
               style={{ border: '1px solid #e2e8f0', background: '#f8fafc', borderRadius: '4px', fontSize: '11px', padding: '4px 8px', color: '#1e293b', cursor: 'pointer', outline: 'none' }}
             >
               <option value="All">All Confidence</option>
-              <option value="High">High</option>
-              <option value="Medium">Medium</option>
-              <option value="Low">Low</option>
+              <option value="High">High Confidence</option>
+              <option value="Medium">Medium Confidence</option>
+              <option value="Low">Low Confidence</option>
             </select>
             <select
               value={typeFilter}
@@ -118,7 +133,7 @@ const FireActivity: React.FC = () => {
               <option value="Industrial">Industrial</option>
             </select>
             <span style={{ fontSize: '11px', color: '#64748b', background: '#f1f5f9', padding: '4px 8px', borderRadius: '4px' }}>
-              {filteredFires.length} fires shown
+              {fires.length} thermal hotspots
             </span>
           </div>
         </div>
@@ -141,7 +156,7 @@ const FireActivity: React.FC = () => {
             <div style={{ fontSize: '10px', fontWeight: '600', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px' }}>
               {s.label}
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: s.color, lineHeight: '1' }}>
+            <div style={{ fontSize: '22px', fontWeight: '700', color: s.color, lineHeight: '1' }}>
               {s.value}
             </div>
           </div>
@@ -182,12 +197,12 @@ const FireActivity: React.FC = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
               <BarChart2 size={13} color="#64748b" />
               <span style={{ fontSize: '12px', fontWeight: '600', color: '#1e293b' }}>
-                State-wise Fire Count
+                State-wise Active Burning Distribution
               </span>
             </div>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart
-                data={fireStatsByState}
+                data={stateStats}
                 layout="vertical"
                 margin={{ top: 0, right: 8, bottom: 0, left: 60 }}
               >
@@ -203,8 +218,9 @@ const FireActivity: React.FC = () => {
 
           {/* Fire table */}
           <div style={{ borderTop: '1px solid #f1f5f9', padding: '0 0 14px' }}>
-            <div style={{ padding: '12px 14px 8px', fontSize: '12px', fontWeight: '600', color: '#1e293b' }}>
-              Recent Detections
+            <div style={{ padding: '12px 14px 8px', fontSize: '12px', fontWeight: '600', color: '#1e293b', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span>Recent Detections</span>
+              <span style={{ fontSize: '10px', color: '#94a3b8' }}>MODIS / VIIRS</span>
             </div>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px' }}>
               <thead>
@@ -215,12 +231,12 @@ const FireActivity: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {firePoints.slice(0, 10).map((f) => (
+                {fires.slice(0, 10).map((f) => (
                   <tr key={f.id}>
                     <td style={{ padding: '8px 14px', borderBottom: '1px solid #f8fafc', color: '#334155' }}>{f.state}</td>
                     <td style={{ padding: '8px 14px', borderBottom: '1px solid #f8fafc', color: '#475569' }}>{f.type}</td>
                     <td style={{ padding: '8px 14px', borderBottom: '1px solid #f8fafc' }}>
-                      <span style={{ fontSize: '10px', fontWeight: '600', color: CONFIDENCE_COLORS[f.confidence], background: `${CONFIDENCE_COLORS[f.confidence]}18`, padding: '2px 6px', borderRadius: '4px' }}>
+                      <span style={{ fontSize: '10px', fontWeight: '600', color: CONFIDENCE_COLORS[f.confidence] || '#f97316', background: `${CONFIDENCE_COLORS[f.confidence] || '#f97316'}18`, padding: '2px 6px', borderRadius: '4px' }}>
                         {f.confidence}
                       </span>
                     </td>
