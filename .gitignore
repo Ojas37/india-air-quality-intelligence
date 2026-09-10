@@ -24,3 +24,17 @@ dist-ssr
 *.sw?
 
 .vercel
+
+# Python & ML
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.env
+.venv
+env/
+venv/
+ENV/
