@@ -1,0 +1,76 @@
+{
+  "model_type": "XGBoost Regressor",
+  "target": "Surface PM2.5 (\u00b5g/m\u00b3)",
+  "trained_at": "2026-09-10T11:22:48.358394Z",
+  "samples": 419,
+  "feature_count": 27,
+  "cross_validation_scores": {
+    "Ridge Regression (Baseline)": {
+      "MAE": 7.94,
+      "RMSE": 10.25,
+      "R2": 0.955
+    },
+    "Random Forest": {
+      "MAE": 6.71,
+      "RMSE": 8.46,
+      "R2": 0.969
+    },
+    "XGBoost Regressor (Production)": {
+      "MAE": 5.75,
+      "RMSE": 7.19,
+      "R2": 0.978
+    }
+  },
+  "production_model_metrics": {
+    "MAE": 5.75,
+    "RMSE": 7.19,
+    "R2": 0.978
+  },
+  "feature_importance_ranking": {
+    "latitude": 0.5809,
+    "no2_column": 0.142,
+    "relative_humidity": 0.1199,
+    "fire_frp_5km": 0.0333,
+    "hcho_column": 0.027,
+    "wind_v": 0.0243,
+    "co_column": 0.0133,
+    "fire_frp_25km": 0.0123,
+    "dewpoint_2m": 0.0103,
+    "longitude": 0.0094,
+    "dist_to_nearest_fire_km": 0.0085,
+    "temperature_2m": 0.0082,
+    "surface_pressure": 0.0037,
+    "boundary_layer_height": 0.0021,
+    "aod_insat": 0.0019,
+    "so2_column": 0.0012,
+    "wind_speed": 0.0008,
+    "wind_u": 0.0004,
+    "hour": 0.0004,
+    "wind_direction": 0.0001,
+    "total_precipitation": 0.0,
+    "fire_count_5km": 0.0,
+    "fire_count_25km": 0.0,
+    "elevation_m": 0.0,
+    "month": 0.0,
+    "day_of_year": 0.0,
+    "is_weekend": 0.0
+  },
+  "category_error_breakdown": {
+    "Satisfactory": {
+      "count": 66,
+      "mean_absolute_error": 0.72
+    },
+    "Moderate": {
+      "count": 66,
+      "mean_absolute_error": 0.78
+    },
+    "Poor": {
+      "count": 66,
+      "mean_absolute_error": 0.69
+    },
+    "Very Poor": {
+      "count": 221,
+      "mean_absolute_error": 0.63
+    }
+  }
+}

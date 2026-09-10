@@ -104,6 +104,21 @@ async def get_monitoring_stations(
     return {"total_stations": len(sample_stations), "stations": sample_stations}
 
 
+from backend.app.ml.inference.predictor import get_predictor
+
+
+@router.get("/metrics")
+async def get_model_metrics():
+    """
+    Returns official cross-validation and production model performance metrics
+    (MAE, RMSE, R2, category error breakdown).
+    """
+    predictor = get_predictor()
+    if predictor.metrics:
+        return predictor.metrics
+    return {"status": "Model metrics unavailable or model training required."}
+
+
 @router.get("/prediction", response_model=PredictionResponse)
 async def predict_air_quality(
     lat: float = Query(..., ge=-90.0, le=90.0, description="Latitude"),
@@ -113,60 +128,36 @@ async def predict_air_quality(
     Evaluates AI Surface PM2.5 model and computes CPCB NAQI for any location across India.
     Includes TreeSHAP local feature explainability.
     """
-    # Deterministic spatial baseline inference for unmonitored coordinates
-    # Indo-Gangetic latitude gradient simulation
-    is_igp = 25.0 <= lat <= 32.0 and 74.0 <= lon <= 88.0
-    base_pm25 = 145.0 if is_igp else 65.0
-    
-    # Sub-index conversion via CPCB formula
-    derived_aqi = calculate_sub_index("pm25", base_pm25) or 100
-    category = get_aqi_category(derived_aqi).value
+    predictor = get_predictor()
+    result = predictor.predict_location(lat=lat, lon=lon)
 
-    # Explainability (TreeSHAP feature attributions)
     shap_contributions = [
         FeatureContribution(
-            feature="aod_insat",
-            contribution_ugm3=38.4 if is_igp else 12.0,
-            percentage=41.5,
-            description="Columnar aerosol optical depth measured by INSAT-3D",
-        ),
-        FeatureContribution(
-            feature="pblh_era5",
-            contribution_ugm3=24.2 if is_igp else 8.0,
-            percentage=26.2,
-            description="Planetary boundary layer height compression",
-        ),
-        FeatureContribution(
-            feature="fire_frp_25km",
-            contribution_ugm3=18.6 if is_igp else 2.0,
-            percentage=20.1,
-            description="Upwind active fire radiative power from NASA FIRMS",
-        ),
-        FeatureContribution(
-            feature="wind_speed",
-            contribution_ugm3=-11.2 if is_igp else -4.0,
-            percentage=-12.2,
-            description="Surface wind ventilation dispersion factor",
-        ),
+            feature=fc["feature"],
+            contribution_ugm3=fc["contribution_ugm3"],
+            percentage=fc["percentage"],
+            description=fc["description"],
+        )
+        for fc in result.get("feature_contributions", [])
     ]
 
     return PredictionResponse(
         latitude=lat,
         longitude=lon,
-        region_name=f"Spatial Point ({lat:.3f}°N, {lon:.3f}°E)",
-        pm25_pred=round(base_pm25, 1),
+        region_name=f"Spatial Coordinate ({lat:.3f}°N, {lon:.3f}°E)",
+        pm25_pred=result["pm25_pred"],
         pm25_unit="µg/m³",
-        aqi_pred=derived_aqi,
-        aqi_category=category,
+        aqi_pred=result["aqi_pred"],
+        aqi_category=result["aqi_category"],
         dominant_pollutant="PM2.5",
-        confidence_score=0.87,
-        confidence_interval_95=[round(base_pm25 * 0.88, 1), round(base_pm25 * 1.12, 1)],
-        confidence_level=ConfidenceLevel.HIGH if is_igp else ConfidenceLevel.MODERATE,
+        confidence_score=result["confidence_score"],
+        confidence_interval_95=result["confidence_interval_95"],
+        confidence_level=ConfidenceLevel(result["confidence_level"]),
         feature_contributions=shap_contributions,
-        model_version="xgboost-pm25-v1.0",
+        model_version=result["model_version"],
         source_type=SourceType.AI_ESTIMATED,
         timestamp=datetime.utcnow(),
-        demo_mode=True,
+        demo_mode=False,
     )
 
 
