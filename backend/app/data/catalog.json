@@ -24,7 +24,7 @@
       "range_check=Passed"
     ],
     "total_records": 19,
-    "last_ingested_at": "2026-09-10T11:16:44.702293",
+    "last_ingested_at": "2026-09-10T11:35:03.946304",
     "status": "LIVE"
   },
   "insat_aod": {
@@ -45,7 +45,7 @@
       "cloud_mask=Clear"
     ],
     "total_records": 152,
-    "last_ingested_at": "2026-09-10T11:16:44.721364",
+    "last_ingested_at": "2026-09-10T11:35:03.964006",
     "status": "LIVE"
   },
   "tropomi_trace_gases": {
@@ -70,7 +70,7 @@
       "cloud_fraction<0.3"
     ],
     "total_records": 10,
-    "last_ingested_at": "2026-09-10T11:16:44.733241",
+    "last_ingested_at": "2026-09-10T11:35:03.974800",
     "status": "LIVE"
   },
   "nasa_firms": {
@@ -93,7 +93,7 @@
       "day_night=D/N"
     ],
     "total_records": 11,
-    "last_ingested_at": "2026-09-10T11:16:44.744945",
+    "last_ingested_at": "2026-09-10T11:35:03.984414",
     "status": "LIVE"
   },
   "era5_meteorology": {
@@ -119,7 +119,7 @@
       "physical_bounds_check=Passed"
     ],
     "total_records": 10,
-    "last_ingested_at": "2026-09-10T11:16:44.756753",
+    "last_ingested_at": "2026-09-10T11:35:03.995547",
     "status": "LIVE"
   }
 }
