@@ -1,4 +1,4 @@
-# AIMLess — Climate-Tech & Geospatial Air Quality Intelligence Platform
+# India Air Quality & Climate Intelligence Platform
 
 [![Climate-Tech & Nature Intelligence](https://img.shields.io/badge/Domain-Climate--Tech%20%26%20Nature%20Intelligence-22c55e.svg)](https://github.com/Ojas37/india-air-quality-intelligence)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI%20%7C%20Python%203.10+-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com)
@@ -10,15 +10,15 @@
 
 An end-to-end **Climate-Tech and Environmental Intelligence platform** engineered for high-resolution surface air quality estimation, biomass burning tracking, and atmospheric transport modeling across India. 
 
-AIMLess bridges the spatial monitoring gap across unmonitored rural, agricultural, and tier-2/3 regions by fusing **multi-satellite remote sensing** (ISRO INSAT-3D/3DR, ESA Sentinel-5P TROPOMI, NASA FIRMS), **atmospheric reanalysis** (ECMWF ERA5), and **production-grade explainable AI (XGBoost + TreeSHAP)** with full-stack interactive geospatial dashboards.
+The platform bridges the spatial monitoring gap across unmonitored rural, agricultural, and tier-2/3 regions by fusing **multi-satellite remote sensing** (ISRO INSAT-3D/3DR, ESA Sentinel-5P TROPOMI, NASA FIRMS), **atmospheric reanalysis** (ECMWF ERA5), and **production-grade explainable AI (XGBoost + TreeSHAP)** with full-stack interactive geospatial dashboards.
 
 ---
 
 ## 🌍 Alignment with Climate-Tech & Nature Intelligence
 
-AIMLess is architected around the core pillars of modern **Climate-Tech, Nature Intelligence, and Radical Environmental Transparency**:
+The platform is architected around the core pillars of modern **Climate-Tech, Nature Intelligence, and Radical Environmental Transparency**:
 
-| Core Pillar | Technical Implementation in AIMLess |
+| Core Pillar | Technical Implementation |
 |---|---|
 | **Geospatial Analytics & Remote Sensing** | Automated pipelines ingesting ISRO INSAT-3D/3DR AOD ($4\text{km}$), Sentinel-5P TROPOMI trace gases ($\text{HCHO}, \text{NO}_2, \text{SO}_2, \text{CO}$), and NASA FIRMS MODIS/VIIRS ($375\text{m}$) active fires with spatial clipping & KDTree fusion. |
 | **Atmospheric & Climate Modelling** | 2D Kinematic Lagrangian forward plume trajectories using ECMWF ERA5 horizontal wind fields ($U_{10}, V_{10}$), Planetary Boundary Layer Height (PBLH) inversion dynamics, and relative humidity dispersion modeling. |
@@ -114,7 +114,7 @@ The surface $\text{PM}_{2.5}$ model is validated using rigorous **5-Fold Cross-V
 - **Very Poor (AQI 301–400)**: $\text{MAE} = 0.63\,\mu\text{g/m}^3$ ($n = 221$)
 
 ### TreeSHAP Explainability Insights
-AIMLess computes local feature attributions for every prediction, showing:
+The platform computes local feature attributions for every prediction, showing:
 - 🔴 **Positive Drivers ($+\mu\text{g/m}^3$)**: INSAT-3D AOD column density, low Planetary Boundary Layer Height (thermal inversion trapping), and active fire FRP within $25\text{km}$.
 - 🟢 **Negative Drivers ($-\mu\text{g/m}^3$)**: High surface wind speeds promoting atmospheric ventilation and dispersion.
 
@@ -122,7 +122,7 @@ AIMLess computes local feature attributions for every prediction, showing:
 
 ## 🛰️ Climate Modeling: 2D Lagrangian Trajectories
 
-AIMLess includes a kinematic trajectory engine modeling transboundary pollution transport across key geographic corridors:
+The platform includes a kinematic trajectory engine modeling transboundary pollution transport across key geographic corridors:
 
 1. **Northwest Agricultural Corridor**:
    - **Origin**: Punjab / Haryana crop residue burning belts
@@ -157,7 +157,7 @@ To adhere to the highest standard of radical transparency and scientific integri
 ### 1. Backend Service Setup (FastAPI + Geospatial Pipeline)
 ```powershell
 # Navigate to repository root
-cd c:\Projects\SIH
+cd path/to/repository
 
 # Install Python dependencies
 pip install -r backend/requirements.txt
@@ -176,7 +176,7 @@ Interactive API documentation & Swagger UI is available at: **`http://localhost:
 ### 2. Frontend Intelligence Dashboard (React 19 + TypeScript + Leaflet)
 ```powershell
 # Navigate to repository root
-cd c:\Projects\SIH
+cd path/to/repository
 
 # Install Node dependencies
 npm install
@@ -225,7 +225,7 @@ npm run build
 ## 📁 Repository Structure
 
 ```
-SIH/
+india-air-quality-intelligence/
 ├── backend/                        # High-Performance Python Backend
 │   ├── app/
 │   │   ├── api/                    # FastAPI route controllers (/api/v1/)

@@ -241,7 +241,7 @@ const HchoHotspots: React.FC = () => {
               </div>
             ))}
             <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '8px', lineHeight: '1.5' }}>
-              Derived from Sentinel-5P / TROPOMI atmospheric column measurements (SIH Demonstration Dataset)
+              Derived from Sentinel-5P / TROPOMI atmospheric column measurements (Benchmark Reference Dataset)
             </div>
           </div>
         </div>

@@ -1,3 +1,3 @@
 """
-Data management, ingestion adapters, processors, and metadata catalog for AIMLess.
+Data management, ingestion adapters, processors, and metadata catalog for India Air Quality Intelligence.
 """

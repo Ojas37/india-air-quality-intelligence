@@ -78,7 +78,7 @@ const TopHeader: React.FC<TopHeaderProps> = ({ title, subtitle }) => {
 
       {/* Controls */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-        {/* SIH Demonstration Dataset Badge */}
+        {/* Benchmark Reference Dataset Badge */}
         <div
           style={{
             display: 'flex',
@@ -94,7 +94,7 @@ const TopHeader: React.FC<TopHeaderProps> = ({ title, subtitle }) => {
           }}
         >
           <ShieldCheck size={12} color="#1d4ed8" />
-          <span>SIH Demonstration Dataset</span>
+          <span>Benchmark Reference Dataset</span>
         </div>
 
         {/* Data status */}

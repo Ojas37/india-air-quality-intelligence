@@ -1,3 +1,3 @@
 """
-Core configuration and utility modules for AIMLess.
+Core configuration and utility modules for India Air Quality & Climate Intelligence Platform.
 """

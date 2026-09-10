@@ -29,7 +29,7 @@ const DataSources: React.FC = () => {
             </h1>
           </div>
           <p style={{ fontSize: '12px', color: '#64748b', margin: 0, lineHeight: '1.6' }}>
-            Scientific datasets integrated into AIMLess: in-situ monitoring, geostationary & polar-orbiting satellites, and atmospheric reanalysis.
+            Scientific datasets integrated into the platform: in-situ monitoring, geostationary & polar-orbiting satellites, and atmospheric reanalysis.
           </p>
         </div>
 
@@ -119,9 +119,9 @@ const DataSources: React.FC = () => {
 
         {/* Footer note */}
         <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '11px', color: '#94a3b8', lineHeight: '1.8' }}>
-          AIMLess — India Air Quality & Pollution Intelligence Platform
+          India Air Quality & Climate Intelligence Platform
           <br />
-          Smart India Hackathon (SIH) Real-Data Geospatial Pipeline & Benchmark Demonstration
+          Multi-Source Geospatial Fusion Pipeline & Reference Demonstration
         </div>
       </div>
     </div>

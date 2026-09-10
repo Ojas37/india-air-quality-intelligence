@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     )
 
     # Project Info
-    PROJECT_NAME: str = "AIMLess — India Air Quality & Pollution Intelligence Platform"
+    PROJECT_NAME: str = "India Air Quality & Climate Intelligence Platform"
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api/v1"
     ENVIRONMENT: str = "development"
@@ -40,7 +40,7 @@ class Settings(BaseSettings):
             return v
         raise ValueError(v)
 
-    # SIH Demo Mode
+    # Benchmark Demonstration Mode
     DEMO_MODE: bool = True
 
     # Storage Paths

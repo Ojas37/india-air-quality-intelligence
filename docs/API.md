@@ -1,6 +1,6 @@
-# AIMLess — API Specification (`/api/v1/`)
+# India Air Quality Intelligence — API Specification (`/api/v1/`)
 
-This document defines the REST API contract for the **AIMLess: India Air Quality & Pollution Intelligence Platform**.
+This document defines the REST API contract for the **India Air Quality & Climate Intelligence Platform**.
 
 All endpoints adhere to versioned routing under `/api/v1/`, strict JSON/GeoJSON payload serialization, and standard scientific metadata classification.
 

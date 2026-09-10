@@ -1,6 +1,6 @@
-# AIMLess — Scientific Data Sources & Methodology
+# Scientific Data Sources & Methodology
 
-This document details the scientific datasets, observation mechanics, preprocessing requirements, and quality control flags integrated into the AIMLess platform.
+This document details the scientific datasets, observation mechanics, preprocessing requirements, and quality control flags integrated into the platform.
 
 ---
 
@@ -43,7 +43,7 @@ This document details the scientific datasets, observation mechanics, preprocess
 
 ---
 
-## 3. Data Freshness & SIH Demo Scenario
+## 3. Data Freshness & Benchmark Reference Scenario
 
-- **Operational Pipeline**: Automated background cron or worker fetching freshest data feeds.
-- **SIH Benchmark Dataset**: High-pollution post-monsoon Indo-Gangetic Plain case study (combining intense stubble burning, low boundary layer height, and north-westerly transport) preserved as reproducible reference data for hackathon demonstrations.
+- **Operational Pipeline**: Automated background worker fetching freshest data feeds.
+- **Benchmark Reference Dataset**: High-pollution post-monsoon Indo-Gangetic Plain case study (combining intense stubble burning, low boundary layer height, and north-westerly transport) preserved as reproducible reference data.

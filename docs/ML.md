@@ -1,4 +1,4 @@
-# AIMLess — AI/ML Surface Air Quality Modeling & Explainability
+# AI/ML Surface Air Quality Modeling & Explainability
 
 This document details the machine learning methodology for estimating surface $\text{PM}_{2.5}$ across India, model validation protocols, and TreeSHAP explainability.
 
@@ -6,7 +6,7 @@ This document details the machine learning methodology for estimating surface $\
 
 ## 1. Problem Formulation & Pipeline
 
-Directly predicting AQI with a machine learning classifier or regressor produces distorted boundaries across non-linear index thresholds. AIMLess adheres to the **pollutant-first estimation pipeline**:
+Directly predicting AQI with a machine learning classifier or regressor produces distorted boundaries across non-linear index thresholds. The platform adheres to the **pollutant-first estimation pipeline**:
 
 ```
 [Satellite AOD + Trace Gases + ERA5 Meteorology + FIRMS Fires + Geography]

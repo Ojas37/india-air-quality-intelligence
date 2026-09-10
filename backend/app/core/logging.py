@@ -22,7 +22,7 @@ def setup_logging():
     logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
     logging.getLogger("uvicorn.error").setLevel(logging.INFO)
 
-    return logging.getLogger("aimless")
+    return logging.getLogger("air_quality_intelligence")
 
 
 logger = setup_logging()
