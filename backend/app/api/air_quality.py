@@ -195,3 +195,26 @@ async def get_timeseries(
         points=points,
         source_type=SourceType.AI_ESTIMATED,
     )
+
+
+@router.get("/grid")
+async def get_air_quality_grid(
+    min_lat: float = Query(28.0, description="Minimum latitude"),
+    min_lon: float = Query(76.5, description="Minimum longitude"),
+    max_lat: float = Query(29.0, description="Maximum latitude"),
+    max_lon: float = Query(77.8, description="Maximum longitude"),
+    step_deg: float = Query(0.25, ge=0.1, le=1.0, description="Grid resolution in degrees"),
+):
+    """
+    Sub-second bounding-box spatial raster slice for regional high-resolution maps.
+    """
+    predictor = get_predictor()
+    grid_cells = predictor.predict_bounding_box(min_lat, min_lon, max_lat, max_lon, step_deg=step_deg)
+    return {
+        "bounding_box": [min_lon, min_lat, max_lon, max_lat],
+        "step_degrees": step_deg,
+        "total_cells": len(grid_cells),
+        "source_type": SourceType.AI_ESTIMATED,
+        "cells": grid_cells,
+    }
+

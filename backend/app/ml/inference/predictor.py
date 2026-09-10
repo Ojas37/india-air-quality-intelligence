@@ -8,6 +8,7 @@ from datetime import datetime
 
 from backend.app.core.config import settings
 from backend.app.core.logging import logger
+from backend.app.core.cache import cached, memory_cache
 from backend.app.core.aqi import calculate_sub_index, get_aqi_category
 from backend.app.geospatial.spatial_join import GeospatialFusionEngine
 from backend.app.ml.training.trainer import FEATURE_COLUMNS
@@ -50,7 +51,13 @@ class AirQualityPredictor:
     ) -> Dict[str, Any]:
         """
         Executes end-to-end inference for arbitrary coordinates across India.
+        Uses cached lookups for sub-millisecond repeated evaluations.
         """
+        cache_key = f"pred_pt:{round(lat, 3)}:{round(lon, 3)}"
+        cached_result = memory_cache.get(cache_key)
+        if cached_result is not None:
+            return cached_result
+
         # 1. Geospatial Fusion: Extract multi-source environmental features
         features_dict = self.fusion_engine.fuse_single_point(lat, lon, timestamp=timestamp)
 
@@ -83,7 +90,7 @@ class AirQualityPredictor:
         # 6. Local Feature Explainability (TreeSHAP Approximation)
         shap_explanations = self._calculate_feature_attributions(features_dict, pm25_pred)
 
-        return {
+        result = {
             "latitude": lat,
             "longitude": lon,
             "pm25_pred": pm25_pred,
@@ -99,6 +106,32 @@ class AirQualityPredictor:
             "source_type": "AI Estimated",
             "timestamp": datetime.utcnow().isoformat() + "Z",
         }
+
+        memory_cache.set(cache_key, result, ttl_seconds=600)
+        return result
+
+    def predict_bounding_box(
+        self, min_lat: float, min_lon: float, max_lat: float, max_lon: float, step_deg: float = 0.5
+    ) -> List[Dict[str, Any]]:
+        """
+        Fast spatial grid inference for a requested geographic bounding box.
+        """
+        cache_key = f"bbox:{min_lat}:{min_lon}:{max_lat}:{max_lon}:{step_deg}"
+        cached_grid = memory_cache.get(cache_key)
+        if cached_grid is not None:
+            return cached_grid
+
+        lats = np.arange(min_lat, max_lat + 0.01, step_deg)
+        lons = np.arange(min_lon, max_lon + 0.01, step_deg)
+
+        results = []
+        for lat in lats:
+            for lon in lons:
+                pred = self.predict_location(float(lat), float(lon))
+                results.append(pred)
+
+        memory_cache.set(cache_key, results, ttl_seconds=900)
+        return results
 
     def _calculate_feature_attributions(
         self, features: Dict[str, Any], pm25_pred: float
