@@ -1,0 +1,12 @@
+region,state,lat,lon,hcho_column,no2_column,so2_column,co_column,qa_value,timestamp
+Ludhiana Sector,Punjab,30.901,75.8573,18.4,14.2,2.1,240.0,0.88,2026-09-10 08:30:00
+Amritsar Sector,Punjab,31.634,74.8723,16.8,12.8,1.8,225.0,0.84,2026-09-10 08:30:00
+Karnal Belt,Haryana,29.6857,76.9905,15.5,15.1,2.4,230.0,0.9,2026-09-10 08:30:00
+Ghaziabad Industrial,Uttar Pradesh,28.6692,77.4538,15.2,28.6,5.8,260.0,0.78,2026-09-10 08:30:00
+Delhi Metropolitan,Delhi,28.6139,77.209,14.1,32.4,4.6,275.0,0.82,2026-09-10 08:30:00
+Vadodara Petrochemical,Gujarat,22.3072,73.1812,14.8,22.0,6.2,210.0,0.86,2026-09-10 08:30:00
+Mumbai Urban Basin,Maharashtra,19.076,72.8777,11.2,24.5,3.8,195.0,0.72,2026-09-10 08:30:00
+Singrauli Thermal Power,Madhya Pradesh,24.1997,82.6644,13.6,26.8,9.4,205.0,0.85,2026-09-10 08:30:00
+Bengaluru Plateau,Karnataka,12.9716,77.5946,6.8,11.4,1.2,145.0,0.92,2026-09-10 08:30:00
+Western Ghats Forest,Kerala,10.8505,76.2711,7.4,3.2,0.4,120.0,0.94,2026-09-10 08:30:00
+Cloud Edge Point,Odisha,20.2961,85.8245,24.0,45.0,12.0,400.0,0.25,2026-09-10 08:30:00

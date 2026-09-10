@@ -1,0 +1,125 @@
+{
+  "cpcb_caaqms": {
+    "dataset_id": "cpcb_caaqms",
+    "name": "CPCB Continuous Ambient Air Quality Monitoring",
+    "provider": "Central Pollution Control Board",
+    "parameters": [
+      "PM2.5",
+      "PM10",
+      "NO2",
+      "SO2",
+      "CO",
+      "O3",
+      "NH3"
+    ],
+    "spatial_coverage": "India (Subcontinent)",
+    "spatial_resolution": "Point in-situ",
+    "temporal_frequency": "15-minute / Hourly",
+    "format": "CSV / JSON",
+    "raw_path": "C:\\Projects\\SIH\\backend\\data\\raw\\cpcb\\cpcb_latest.csv",
+    "processed_path": "C:\\Projects\\SIH\\backend\\data\\processed\\cpcb\\cpcb_latest.parquet",
+    "quality_flags": [
+      "qa_status=Valid",
+      "negative_value_filter=True",
+      "range_check=Passed"
+    ],
+    "total_records": 19,
+    "last_ingested_at": "2026-09-10T11:16:44.702293",
+    "status": "LIVE"
+  },
+  "insat_aod": {
+    "dataset_id": "insat_aod",
+    "name": "INSAT-3D / INSAT-3DR Aerosol Optical Depth",
+    "provider": "ISRO MOSDAC",
+    "parameters": [
+      "AOD_550nm"
+    ],
+    "spatial_coverage": "India (Subcontinent)",
+    "spatial_resolution": "0.05\u00b0 (~5 km)",
+    "temporal_frequency": "30-min",
+    "format": "HDF5 / GeoParquet",
+    "raw_path": "C:\\Projects\\SIH\\backend\\data\\raw\\insat_aod\\insat_aod_latest.csv",
+    "processed_path": "C:\\Projects\\SIH\\backend\\data\\processed\\insat_aod\\insat_aod_latest.parquet",
+    "quality_flags": [
+      "qc_flag=0 (High Quality)",
+      "cloud_mask=Clear"
+    ],
+    "total_records": 152,
+    "last_ingested_at": "2026-09-10T11:16:44.721364",
+    "status": "LIVE"
+  },
+  "tropomi_trace_gases": {
+    "dataset_id": "tropomi_trace_gases",
+    "name": "Copernicus Sentinel-5P TROPOMI Trace Gases",
+    "provider": "ESA / Copernicus",
+    "parameters": [
+      "HCHO",
+      "NO2",
+      "SO2",
+      "CO",
+      "O3"
+    ],
+    "spatial_coverage": "India (Subcontinent)",
+    "spatial_resolution": "5.5 \u00d7 3.5 km\u00b2",
+    "temporal_frequency": "Daily",
+    "format": "NetCDF / GeoParquet",
+    "raw_path": "C:\\Projects\\SIH\\backend\\data\\raw\\tropomi\\tropomi_latest.csv",
+    "processed_path": "C:\\Projects\\SIH\\backend\\data\\processed\\tropomi\\tropomi_latest.parquet",
+    "quality_flags": [
+      "qa_value>0.5",
+      "cloud_fraction<0.3"
+    ],
+    "total_records": 10,
+    "last_ingested_at": "2026-09-10T11:16:44.733241",
+    "status": "LIVE"
+  },
+  "nasa_firms": {
+    "dataset_id": "nasa_firms",
+    "name": "NASA FIRMS Active Fires & FRP",
+    "provider": "NASA LANCE (MODIS / VIIRS)",
+    "parameters": [
+      "FRP_MW",
+      "Brightness_Temp",
+      "Confidence"
+    ],
+    "spatial_coverage": "India (Subcontinent)",
+    "spatial_resolution": "375m (VIIRS) / 1km (MODIS)",
+    "temporal_frequency": "4-8 passes/day",
+    "format": "GeoJSON / Parquet",
+    "raw_path": "C:\\Projects\\SIH\\backend\\data\\raw\\firms\\firms_latest.csv",
+    "processed_path": "C:\\Projects\\SIH\\backend\\data\\processed\\firms\\firms_latest.parquet",
+    "quality_flags": [
+      "confidence>=50%",
+      "day_night=D/N"
+    ],
+    "total_records": 11,
+    "last_ingested_at": "2026-09-10T11:16:44.744945",
+    "status": "LIVE"
+  },
+  "era5_meteorology": {
+    "dataset_id": "era5_meteorology",
+    "name": "ECMWF ERA5 Atmospheric Reanalysis",
+    "provider": "Copernicus Climate Change Service",
+    "parameters": [
+      "u10",
+      "v10",
+      "t2m",
+      "d2m",
+      "pblh",
+      "sp",
+      "tp"
+    ],
+    "spatial_coverage": "India (Subcontinent)",
+    "spatial_resolution": "0.25\u00b0 (~25 km)",
+    "temporal_frequency": "Hourly",
+    "format": "NetCDF / GeoParquet",
+    "raw_path": "C:\\Projects\\SIH\\backend\\data\\raw\\era5\\era5_latest.csv",
+    "processed_path": "C:\\Projects\\SIH\\backend\\data\\processed\\era5\\era5_latest.parquet",
+    "quality_flags": [
+      "physical_bounds_check=Passed"
+    ],
+    "total_records": 10,
+    "last_ingested_at": "2026-09-10T11:16:44.756753",
+    "status": "LIVE"
+  }
+}

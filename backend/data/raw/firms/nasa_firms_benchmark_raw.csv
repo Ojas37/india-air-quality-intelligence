@@ -1,0 +1,13 @@
+fire_id,lat,lon,frp_mw,brightness_k,confidence,satellite,daynight,state,district,type,timestamp
+FIRMS_PB_001,31.1471,75.3412,48.5,345.2,92,VIIRS-NOAA20,D,Punjab,Jalandhar,Agricultural,2026-09-10 07:15:00
+FIRMS_PB_002,30.3165,76.3988,62.1,356.8,95,VIIRS-S-NPP,D,Punjab,Patiala,Agricultural,2026-09-10 07:20:00
+FIRMS_PB_003,30.901,75.8573,54.0,350.1,88,VIIRS-NOAA20,D,Punjab,Ludhiana,Agricultural,2026-09-10 07:18:00
+FIRMS_PB_004,31.634,74.8723,38.6,339.4,85,MODIS-Aqua,D,Punjab,Amritsar,Agricultural,2026-09-10 07:45:00
+FIRMS_PB_005,30.211,74.9455,41.2,342.0,90,VIIRS-S-NPP,D,Punjab,Bathinda,Agricultural,2026-09-10 07:22:00
+FIRMS_HR_001,29.9695,76.8783,32.4,338.4,78,MODIS-Aqua,D,Haryana,Kurukshetra,Agricultural,2026-09-10 07:45:00
+FIRMS_HR_002,29.6857,76.9905,36.8,341.2,82,VIIRS-NOAA20,D,Haryana,Karnal,Agricultural,2026-09-10 07:16:00
+FIRMS_HR_003,29.1492,75.7217,28.5,334.0,74,VIIRS-S-NPP,D,Haryana,Hisar,Agricultural,2026-09-10 07:25:00
+FIRMS_UP_001,27.8974,78.088,24.0,330.5,72,MODIS-Terra,D,Uttar Pradesh,Aligarh,Agricultural,2026-09-10 05:30:00
+FIRMS_MP_001,22.7196,75.8577,18.2,322.0,64,VIIRS-NOAA20,N,Madhya Pradesh,Indore,Forest,2026-09-10 01:15:00
+FIRMS_MP_002,23.1815,79.9864,22.4,326.8,68,VIIRS-S-NPP,N,Madhya Pradesh,Jabalpur,Forest,2026-09-10 01:20:00
+FIRMS_LOW_001,15.3173,75.7139,4.2,305.0,35,MODIS-Aqua,D,Karnataka,Gadag,Unknown,2026-09-10 07:45:00

@@ -1,0 +1,20 @@
+station_id,name,city,state,lat,lon,pm25,pm10,no2,so2,co,o3,timestamp
+DL001,"Anand Vihar, Delhi - DPCC",Delhi,Delhi,28.6476,77.3158,194.0,298.0,82.0,24.0,3.4,44.0,2026-09-10 10:00:00
+DL002,"R K Puram, Delhi - DPCC",Delhi,Delhi,28.5632,77.1869,168.0,242.0,68.0,18.0,2.8,52.0,2026-09-10 10:00:00
+DL003,"Punjabi Bagh, Delhi - DPCC",Delhi,Delhi,28.674,77.131,182.0,268.0,74.0,21.0,3.1,48.0,2026-09-10 10:00:00
+DL004,"IGI Airport (T3), Delhi - IMD",Delhi,Delhi,28.5628,77.0988,154.0,220.0,58.0,16.0,2.2,56.0,2026-09-10 10:00:00
+PB001,"Civil Line, Ludhiana - PPCB",Ludhiana,Punjab,30.901,75.8573,144.0,206.0,62.0,22.0,2.8,40.0,2026-09-10 10:00:00
+PB002,"Golden Temple, Amritsar - PPCB",Amritsar,Punjab,31.62,74.8765,132.0,190.0,58.0,19.0,2.6,42.0,2026-09-10 10:00:00
+HR001,"Sector 6, Panchkula - HSPCB",Panchkula,Haryana,30.6942,76.8606,92.0,145.0,42.0,14.0,1.8,50.0,2026-09-10 10:00:00
+HR002,"Murthal, Sonipat - HSPCB",Sonipat,Haryana,29.025,77.068,158.0,230.0,66.0,21.0,2.9,42.0,2026-09-10 10:00:00
+UP001,"Sanjay Palace, Agra - UPPCB",Agra,Uttar Pradesh,27.2,78.01,126.0,184.0,56.0,20.0,2.5,44.0,2026-09-10 10:00:00
+UP002,"Ardhali Bazar, Varanasi - UPPCB",Varanasi,Uttar Pradesh,25.35,82.98,112.0,168.0,52.0,18.0,2.2,46.0,2026-09-10 10:00:00
+UP003,"Nehru Nagar, Kanpur - UPPCB",Kanpur,Uttar Pradesh,26.48,80.32,150.0,214.0,64.0,23.0,2.8,41.0,2026-09-10 10:00:00
+BR001,"Muradpur, Patna - BSPCB",Patna,Bihar,25.62,85.16,142.0,204.0,60.0,21.0,2.7,43.0,2026-09-10 10:00:00
+MH001,"Bandra Kurla Complex, Mumbai - MPCB",Mumbai,Maharashtra,19.0657,72.8687,84.0,132.0,42.0,14.0,1.9,64.0,2026-09-10 10:00:00
+MH002,"Shivajinagar, Pune - MPCB",Pune,Maharashtra,18.5314,73.8446,72.0,115.0,36.0,11.0,1.5,58.0,2026-09-10 10:00:00
+MH003,"Civil Lines, Nagpur - MPCB",Nagpur,Maharashtra,21.15,79.08,64.0,102.0,30.0,10.0,1.3,50.0,2026-09-10 10:00:00
+KA001,"BTM Layout, Bengaluru - KSPCB",Bengaluru,Karnataka,12.9165,77.6101,34.0,60.0,16.0,5.0,0.7,38.0,2026-09-10 10:00:00
+TN001,"Alandur, Chennai - TNPCB",Chennai,Tamil Nadu,13.0033,80.2014,42.0,74.0,22.0,7.0,0.9,44.0,2026-09-10 10:00:00
+WB001,"Victoria Memorial, Kolkata - WBPCB",Kolkata,West Bengal,22.5448,88.3426,96.0,152.0,48.0,15.0,2.1,49.0,2026-09-10 10:00:00
+TS001,"Sanathnagar, Hyderabad - TSPCB",Hyderabad,Telangana,17.4565,78.4438,58.0,98.0,28.0,9.0,1.2,46.0,2026-09-10 10:00:00
