@@ -1,7 +1,7 @@
 {
   "model_type": "XGBoost Regressor",
   "target": "Surface PM2.5 (\u00b5g/m\u00b3)",
-  "trained_at": "2026-09-10T11:22:48.358394Z",
+  "trained_at": "2026-09-10T11:25:36.498184Z",
   "samples": 419,
   "feature_count": 27,
   "cross_validation_scores": {
